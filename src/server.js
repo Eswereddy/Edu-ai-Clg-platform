@@ -56,6 +56,7 @@ const liveJobFeedRoutes = require('./routes/liveJobFeedRoutes'); // additive: re
 const blockchainVerifyRoutes = require('./routes/blockchainVerifyRoutes'); // additive: on-chain certificate hash anchoring + public verification
 const vectorDbRoutes = require('./routes/vectorDbRoutes'); // additive: embedding-backed vector DB (RAG) over chats/grades/syllabus, sits alongside rag.js
 const mockInterviewRoutes = require('./routes/mockInterviewRoutes'); // additive: mock interview slot scheduling
+const { createStudentReadinessRouter, createPlacementReadinessDashboardRouter } = require('./routes/placementReadinessRoutes'); // additive: composite placement-readiness score (student view) + ranked placement-cell dashboard (faculty/admin/ai-admin view), built read-only from skills/resume/interview/DSA/job-tracker data that already exists
 const studentDataSyncRoutes = require('./routes/studentDataSyncRoutes'); // additive: multi-device sync for the student portal's local data blob
 const pushRoutes = require('./routes/pushRoutes'); // additive: FCM device-token registration + delivery status/test
 const inventoryRoutes = require('./routes/inventoryRoutes'); // additive: asset/stock inventory + issue-return
@@ -371,6 +372,7 @@ app.use('/api/placements/mock-interviews', mockInterviewRoutes);
 app.use('/api/student/data-sync', studentDataSyncRoutes);
 app.use('/api/push', pushRoutes);
 app.use('/api/placements/interview-scheduler', createInterviewSchedulerRouter({ apiKey: ANTHROPIC_API_KEY, model: ANTHROPIC_MODEL }));
+app.use('/api/placements/readiness-dashboard', createPlacementReadinessDashboardRouter());
 app.use('/api/inventory', inventoryRoutes);
 app.use('/api/canteen', canteenRoutes);
 app.use('/api/exam-cell', examCellRoutes);
@@ -444,6 +446,7 @@ app.use('/api/grade-engine', gradeEngineRoutes);
 app.use('/api/rewards', rewardStoreRoutes);
 app.use('/api/student/wellness', wellnessRoutes);
 app.use('/api/student/job-tracker', jobTrackerRoutes);
+app.use('/api/student/placement-readiness', createStudentReadinessRouter());
 app.use('/api/career-prep', createCareerPrepRouter({ apiKey: ANTHROPIC_API_KEY, model: ANTHROPIC_MODEL }));
 app.use('/api/study-tool', createStudyToolRouter({ apiKey: ANTHROPIC_API_KEY, model: ANTHROPIC_MODEL }));
 app.use('/api/student/interview-coach', createStudentInterviewRouter({ apiKey: ANTHROPIC_API_KEY, model: ANTHROPIC_MODEL }));
